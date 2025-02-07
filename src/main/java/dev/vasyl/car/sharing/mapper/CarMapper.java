@@ -4,9 +4,7 @@ import dev.vasyl.car.sharing.config.MapperConfig;
 import dev.vasyl.car.sharing.dto.car.CarCreateUpdateRequestDto;
 import dev.vasyl.car.sharing.dto.car.CarResponseDto;
 import dev.vasyl.car.sharing.model.Car;
-
 import java.util.List;
-
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
