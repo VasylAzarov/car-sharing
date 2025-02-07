@@ -1,0 +1,41 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-admin-user-if-none-exist
+      author: vasyl
+      runOnChange: true
+      changes:
+        - preConditions:
+            onFail: MARK_RAN
+            sqlCheck:
+              expectedResult: 0
+              sql: SELECT COUNT(*) FROM users WHERE email = 'Admin@Admin.com'
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: email
+                  value: Admin@Admin.com
+              - column:
+                  name: password
+                  value: $2a$10$VQ/lk31RlMY.aX1E0yabHORY8t7kKXlzEm66J0JSY4JapLrTcc9Fi
+              - column:
+                  name: first_name
+                  value: Admin
+              - column:
+                  name: last_name
+                  value: Admin
+              - column:
+                  name: shipping_address
+                  value: Admin
+
+        - insert:
+            tableName: users_roles
+            columns:
+              - column:
+                  name: user_id
+                  valueComputed: |
+                    (SELECT id FROM users WHERE email = 'Admin@Admin.com')
+              - column:
+                  name: role_id
+                  valueComputed: |
+                    (SELECT id FROM roles WHERE name = 'MANAGER')

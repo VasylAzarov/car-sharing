@@ -32,6 +32,15 @@ services:
         "spring.datasource.username": "${MYSQLDB_USER}",
         "spring.datasource.password": "${MYSQLDB_ROOT_PASSWORD}",
         "spring.datasource.driver-class-name" : "${SPRING_DATASOURCE_DRIVER_CLASS_NAME}",
-        "server.servlet.context-path": "${SERVER_SERVLET_CONTEXT_PATH}"
+        "spring.jpa.hibernate.ddl-auto" : "${SPRING_JPA_HIBERNATE_DLL_AUTO}",
+        "server.servlet.context-path": "${SERVER_SERVLET_CONTEXT_PATH}",
+        "payment.callback.domain": "${PAYMENT_CALLBACK_DOMAIN}",
+        "stripe.secret.key": "${STRIPE_SECRET_KEY}",
+        "stripe.publishable.key": "${STRIPE_PUBLISHABLE_KEY}",
+        "jwt.expiration": "${JWT_EXPIRATION}",
+        "jwt.secret": "${JWT_SECRET}",
+        "telegram.bot.username": "${TELEGRAM_USERNAME}",
+        "telegram.bot.token": "${TELEGRAM_TOKEN}",
+        "telegram.bot.chat.id": "${TELEGRAM_CHAT_ID}"
       }'
       JAVA_TOOL_OPTIONS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:${DEBUG_PORT}"

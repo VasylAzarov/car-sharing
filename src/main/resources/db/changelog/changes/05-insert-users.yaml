@@ -1,0 +1,120 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-users-1
+      author: vasyl
+      runOnChange: true
+      changes:
+        - preConditions:
+            onFail: MARK_RAN
+            sqlCheck:
+              expectedResult: 0
+              sql: SELECT COUNT(*) FROM users WHERE email = 'user1@email.com'
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: email
+                  value: "user1@email.com"
+              - column:
+                  name: password
+                  value: "$2a$10$fRuZV1BJyeIi.GD8OzQx3e8Jln0LV2VoEjHRAMKFEq2mNIMA3WhS."
+              - column:
+                  name: first_name
+                  value: "Alice"
+              - column:
+                  name: last_name
+                  value: "Smite"
+              - column:
+                  name: shipping_address
+                  value: "1 street, 1, town"
+        - insert:
+            tableName: users_roles
+            columns:
+              - column:
+                  name: user_id
+                  valueComputed: |
+                    (SELECT id FROM users WHERE email = 'user1@email.com')
+              - column:
+                  name: role_id
+                  valueComputed: |
+                    (SELECT id FROM roles WHERE name = 'CUSTOMER')
+
+  - changeSet:
+      id: insert-users-2
+      author: vasyl
+      runOnChange: true
+      changes:
+        - preConditions:
+            onFail: MARK_RAN
+            sqlCheck:
+              expectedResult: 0
+              sql: SELECT COUNT(*) FROM users WHERE email = 'user2@email.com'
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: email
+                  value: "user2@email.com"
+              - column:
+                  name: password
+                  value: "$2a$10$Kd/UHHOgmzFp1uOxnhQRmOZJzv60pr.C0eFJp3YIpg7ycN3jIzhI."
+              - column:
+                  name: first_name
+                  value: "Bob"
+              - column:
+                  name: last_name
+                  value: "Jonson"
+              - column:
+                  name: shipping_address
+                  value: "2 street, 2, town"
+        - insert:
+            tableName: users_roles
+            columns:
+              - column:
+                  name: user_id
+                  valueComputed: |
+                    (SELECT id FROM users WHERE email = 'user2@email.com')
+              - column:
+                  name: role_id
+                  valueComputed: |
+                    (SELECT id FROM roles WHERE name = 'CUSTOMER')
+
+  - changeSet:
+      id: insert-users-3
+      author: vasyl
+      runOnChange: true
+      changes:
+        - preConditions:
+            onFail: MARK_RAN
+            sqlCheck:
+              expectedResult: 0
+              sql: SELECT COUNT(*) FROM users WHERE email = 'user3@email.com'
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: email
+                  value: "user3@email.com"
+              - column:
+                  name: password
+                  value: "$2a$10$d0/nLKsNV9vHId0OZ4oaouToE9Njh771.DumrzIO7bQmGXxiTNWrC"
+              - column:
+                  name: first_name
+                  value: "Jack"
+              - column:
+                  name: last_name
+                  value: "Harrison"
+              - column:
+                  name: shipping_address
+                  value: "3 street, 3, town"
+        - insert:
+            tableName: users_roles
+            columns:
+              - column:
+                  name: user_id
+                  valueComputed: |
+                    (SELECT id FROM users WHERE email = 'user3@email.com')
+              - column:
+                  name: role_id
+                  valueComputed: |
+                    (SELECT id FROM roles WHERE name = 'CUSTOMER')

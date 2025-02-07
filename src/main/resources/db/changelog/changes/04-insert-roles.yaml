@@ -1,0 +1,34 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-roles-1
+      author: vasyl
+      runOnChange: true
+      changes:
+        - preConditions:
+            onFail: MARK_RAN
+            sqlCheck:
+              expectedResult: 0
+              sql: SELECT COUNT(*) FROM roles WHERE name = 'CUSTOMER'
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: name
+                  value: CUSTOMER
+
+  - changeSet:
+      id: insert-roles-2
+      author: vasyl
+      runOnChange: true
+      changes:
+        - preConditions:
+            onFail: MARK_RAN
+            sqlCheck:
+              expectedResult: 0
+              sql: SELECT COUNT(*) FROM roles WHERE name = 'MANAGER'
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: name
+                  value: MANAGER

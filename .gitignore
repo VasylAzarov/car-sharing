@@ -5,10 +5,9 @@ target/
 .mvn/
 mvnw
 mvnw.cmd
-.idea/
-*.iml
 .DS_Store
 .env
+.env.test
 
 # IntelliJ IDEA
 .idea/
