@@ -9,9 +9,7 @@ on:
 jobs:
   debug-env:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-
+    environment: TEST_VAR  # Указываем окружение, в котором заданы переменные
     env:
       PAYMENT_CALLBACK_DOMAIN: ${{ secrets.PAYMENT_CALLBACK_DOMAIN }}
       STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
@@ -22,37 +20,22 @@ jobs:
       TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
 
     steps:
-      - name: Checkout Repository
+      - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Print Non-Sensitive Variables
+      - name: Print Environment Variables
         run: |
           echo "PAYMENT_CALLBACK_DOMAIN=$PAYMENT_CALLBACK_DOMAIN"
+          echo "STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY:0:4}********"
           echo "JWT_EXPIRATION=$JWT_EXPIRATION"
+          echo "JWT_SECRET=${JWT_SECRET:0:4}********"
           echo "TELEGRAM_USERNAME=$TELEGRAM_USERNAME"
+          echo "TELEGRAM_TOKEN=${TELEGRAM_TOKEN:0:4}********"
+          echo "TELEGRAM_CHAT_ID=$TELEGRAM_CHAT_ID"
 
-      - name: Check If Secrets Are Set
+      - name: Verify Variables
         run: |
-          if [[ -z "$STRIPE_SECRET_KEY" ]]; then
-            echo "STRIPE_SECRET_KEY is NOT set!"
-          else
-            echo "STRIPE_SECRET_KEY is set."
-          fi
-          
-          if [[ -z "$JWT_SECRET" ]]; then
-            echo "JWT_SECRET is NOT set!"
-          else
-            echo "JWT_SECRET is set."
-          fi
-          
-          if [[ -z "$TELEGRAM_TOKEN" ]]; then
-            echo "TELEGRAM_TOKEN is NOT set!"
-          else
-            echo "TELEGRAM_TOKEN is set."
-          fi
-          
-          if [[ -z "$TELEGRAM_CHAT_ID" ]]; then
-            echo "TELEGRAM_CHAT_ID is NOT set!"
-          else
-            echo "TELEGRAM_CHAT_ID is set."
-          fi
+          [[ -z "$STRIPE_SECRET_KEY" ]] && echo "STRIPE_SECRET_KEY is NOT set!" || echo "STRIPE_SECRET_KEY is set."
+          [[ -z "$JWT_SECRET" ]] && echo "JWT_SECRET is NOT set!" || echo "JWT_SECRET is set."
+          [[ -z "$TELEGRAM_TOKEN" ]] && echo "TELEGRAM_TOKEN is NOT set!" || echo "TELEGRAM_TOKEN is set."
+          [[ -z "$TELEGRAM_CHAT_ID" ]] && echo "TELEGRAM_CHAT_ID is NOT set!" || echo "TELEGRAM_CHAT_ID is set."
