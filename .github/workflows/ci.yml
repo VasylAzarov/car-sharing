@@ -6,15 +6,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    env:
-      PAYMENT_CALLBACK_DOMAIN: ${{ secrets.PAYMENT_CALLBACK_DOMAIN }}
-      STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
-      JWT_EXPIRATION: ${{ secrets.JWT_EXPIRATION }}
-      JWT_SECRET: ${{ secrets.JWT_SECRET }}
-      TELEGRAM_USERNAME: ${{ secrets.TELEGRAM_USERNAME }}
-      TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
-      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-
     steps:
       - uses: actions/checkout@v2
 
@@ -25,16 +16,26 @@ jobs:
           distribution: 'adopt'
           cache: maven
 
+      - name: Set Environment Variables
+        run: |
+          echo "PAYMENT_CALLBACK_DOMAIN=${{ secrets.PAYMENT_CALLBACK_DOMAIN }}" >> $GITHUB_ENV
+          echo "STRIPE_SECRET_KEY=${{ secrets.STRIPE_SECRET_KEY }}" >> $GITHUB_ENV
+          echo "JWT_EXPIRATION=${{ secrets.JWT_EXPIRATION }}" >> $GITHUB_ENV
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> $GITHUB_ENV
+          echo "TELEGRAM_USERNAME=${{ secrets.TELEGRAM_USERNAME }}" >> $GITHUB_ENV
+          echo "TELEGRAM_TOKEN=${{ secrets.TELEGRAM_TOKEN }}" >> $GITHUB_ENV
+          echo "TELEGRAM_CHAT_ID=${{ secrets.TELEGRAM_CHAT_ID }}" >> $GITHUB_ENV
+
       - name: Debug Environment Variables
         run: |
           echo "🔍 Checking Environment Variables"
-          echo "JWT_EXPIRATION=${{ secrets.JWT_EXPIRATION }}"
-          echo "TELEGRAM_CHAT_ID=${{ secrets.TELEGRAM_CHAT_ID }}"
-          echo "STRIPE_SECRET_KEY=${{ secrets.STRIPE_SECRET_KEY }}"
-          echo "PAYMENT_CALLBACK_DOMAIN=${{ secrets.PAYMENT_CALLBACK_DOMAIN }}"
-          echo "TELEGRAM_TOKEN=${{ secrets.TELEGRAM_TOKEN }}"
-          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}"
-          echo "TELEGRAM_USERNAME=${{ secrets.TELEGRAM_USERNAME }}"
+          echo "JWT_EXPIRATION=${JWT_EXPIRATION}"
+          echo "TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}"
+          echo "STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}"
+          echo "PAYMENT_CALLBACK_DOMAIN=${PAYMENT_CALLBACK_DOMAIN}"
+          echo "TELEGRAM_TOKEN=${TELEGRAM_TOKEN}"
+          echo "JWT_SECRET=${JWT_SECRET}"
+          echo "TELEGRAM_USERNAME=${TELEGRAM_USERNAME}"
 
       - name: Build with Maven
         run: mvn --batch-mode --update-snapshots verify
