@@ -30,6 +30,7 @@ class HealthCheckControllerTests {
 
     @BeforeAll
     public void beforeAll() {
+        System.out.println(System.getProperties().toString());
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(applicationContext)
                 .apply(springSecurity())
