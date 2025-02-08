@@ -17,15 +17,14 @@ jobs:
           cache: maven
 
       - name: Load Environment Variables
-        env:
-          PAYMENT_CALLBACK_DOMAIN: ${{ secrets.GITHUB_TOKEN }}
-          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
-          JWT_EXPIRATION: ${{ secrets.JWT_EXPIRATION }}
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
-          TELEGRAM_USERNAME: ${{ secrets.TELEGRAM_USERNAME }}
-          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        
+        run: |
+          echo "PAYMENT_CALLBACK_DOMAIN=${{ secrets.PAYMENT_CALLBACK_DOMAIN }}" >> $GITHUB_ENV
+          echo "STRIPE_SECRET_KEY=${{ secrets.STRIPE_SECRET_KEY }}" >> $GITHUB_ENV
+          echo "JWT_EXPIRATION=${{ secrets.JWT_EXPIRATION }}" >> $GITHUB_ENV
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> $GITHUB_ENV
+          echo "TELEGRAM_USERNAME=${{ secrets.TELEGRAM_USERNAME }}" >> $GITHUB_ENV
+          echo "TELEGRAM_TOKEN=${{ secrets.TELEGRAM_TOKEN }}" >> $GITHUB_ENV
+          echo "TELEGRAM_CHAT_ID=${{ secrets.TELEGRAM_CHAT_ID }}" >> $GITHUB_ENV
 
       - name: Build with Maven
         run: mvn --batch-mode --update-snapshots verify
