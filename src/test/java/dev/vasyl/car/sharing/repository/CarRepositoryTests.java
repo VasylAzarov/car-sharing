@@ -28,7 +28,7 @@ public class CarRepositoryTests {
     private CarRepository carRepository;
 
     @BeforeAll
-    private static void beforeAll(@Autowired DataSource dataSource) {
+    public static void beforeAll(@Autowired DataSource dataSource) {
         executeSqlScript(dataSource, TestConstantsUtil.DB_PATH_CLEAR_ALL);
         executeSqlScript(dataSource, TestConstantsUtil.DB_PATH_ADD_USERS);
     }
@@ -38,7 +38,7 @@ public class CarRepositoryTests {
     }
 
     @SneakyThrows
-    static void executeSqlScript(DataSource dataSource, String dbPath) {
+    public static void executeSqlScript(DataSource dataSource, String dbPath) {
         try (Connection connection = dataSource.getConnection()) {
             connection.setAutoCommit(true);
             ScriptUtils.executeSqlScript(
@@ -55,6 +55,5 @@ public class CarRepositoryTests {
                 TestCarUtil.getDefaultCarPageable()).getContent();
 
         assertEquals(TestCarUtil.getListOfThreeCars().size(), actualListOfCars.size());
-
     }
 }

@@ -51,7 +51,7 @@ class RentalControllerTests {
     private ObjectMapper objectMapper;
 
     @DynamicPropertySource
-    static void setProperties(DynamicPropertyRegistry registry) {
+    public static void setProperties(DynamicPropertyRegistry registry) {
         Dotenv dotenv = Dotenv.load();
         registry.add(TestConstantsUtil.JWT_EXPIRATION_VALUE_NAME,
                 () -> dotenv.get(TestConstantsUtil.JWT_EXPIRATION_ENV_NAME));
@@ -68,9 +68,9 @@ class RentalControllerTests {
     }
 
     @BeforeAll
-    static void beforeAll(@Autowired WebApplicationContext applicationContext,
-                          @Autowired DataSource dataSource) {
-
+    public static void beforeAll(
+            @Autowired WebApplicationContext applicationContext,
+            @Autowired DataSource dataSource) {
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(applicationContext)
                 .apply(springSecurity())
@@ -85,7 +85,7 @@ class RentalControllerTests {
     }
 
     @BeforeEach
-    void beforeEach(@Autowired DataSource dataSource) {
+    public void beforeEach(@Autowired DataSource dataSource) {
         executeSqlScript(dataSource, TestConstantsUtil.DB_PATH_CLEAR_ALL);
         executeSqlScript(dataSource, TestConstantsUtil.DB_PATH_ADD_CARS);
         executeSqlScript(dataSource, TestConstantsUtil.DB_PATH_ADD_USERS);
@@ -93,7 +93,7 @@ class RentalControllerTests {
     }
 
     @SneakyThrows
-    static void executeSqlScript(DataSource dataSource, String sql) {
+    public static void executeSqlScript(DataSource dataSource, String sql) {
         try (Connection connection = dataSource.getConnection()) {
             connection.setAutoCommit(true);
             ScriptUtils.executeSqlScript(
@@ -105,7 +105,7 @@ class RentalControllerTests {
     @Test
     @WithMockUser(username = "customer1@example.com", roles = {"CUSTOMER"})
     @DisplayName("Validate that create a new rental with valid data")
-    void startRental_ValidRequestDto_Success() throws Exception {
+    public void startRental_ValidRequestDto_Success() throws Exception {
         Rental rental = TestRentalUtil.getNotCompletedRental();
         RentalCreateRequestDto createRentalDto = TestRentalUtil.getRentalCreateRequestDto(rental);
         RentalResponseDto expected = TestRentalUtil.getRentalResponseDto(rental);
@@ -126,7 +126,7 @@ class RentalControllerTests {
     @Test
     @WithMockUser(username = "manager@example.com", roles = {"MANAGER"})
     @DisplayName("Verify that find all existent rentals")
-    void getAllByParams_WithValidData_Success() throws Exception {
+    public void getAllByParams_WithValidData_Success() throws Exception {
         User user = TestUserUtil.getFirstCustomer();
 
         mockMvc.perform(
@@ -163,7 +163,7 @@ class RentalControllerTests {
     @Test
     @WithMockUser(username = "customer1@example.com", roles = {"CUSTOMER"})
     @DisplayName("Verify that complete existing rental by valid id should return RentalResponseDto")
-    void completeRental_ValidData_Success() throws Exception {
+    public void completeRental_ValidData_Success() throws Exception {
         Rental rental = TestRentalUtil.getNotCompletedRental();
         RentalSetActualReturnRequestDto requestDto
                 = TestRentalUtil.getRentalSetActualReturnRequestDto(rental);

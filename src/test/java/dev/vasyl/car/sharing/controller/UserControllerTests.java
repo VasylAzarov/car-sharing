@@ -54,7 +54,7 @@ public class UserControllerTests {
     private UserRepository userRepository;
 
     @DynamicPropertySource
-    static void setProperties(DynamicPropertyRegistry registry) {
+    public static void setProperties(DynamicPropertyRegistry registry) {
         Dotenv dotenv = Dotenv.load();
         registry.add(TestConstantsUtil.JWT_EXPIRATION_VALUE_NAME,
                 () -> dotenv.get(TestConstantsUtil.JWT_EXPIRATION_ENV_NAME));
@@ -71,8 +71,9 @@ public class UserControllerTests {
     }
 
     @BeforeAll
-    static void beforeAll(@Autowired WebApplicationContext applicationContext,
-                          @Autowired DataSource dataSource) {
+    public static void beforeAll(
+            @Autowired WebApplicationContext applicationContext,
+            @Autowired DataSource dataSource) {
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(applicationContext)
                 .apply(springSecurity())
@@ -87,13 +88,13 @@ public class UserControllerTests {
     }
 
     @BeforeEach
-    void beforeEach(@Autowired DataSource dataSource) {
+    public void beforeEach(@Autowired DataSource dataSource) {
         executeSqlScript(dataSource, TestConstantsUtil.DB_PATH_CLEAR_ALL);
         executeSqlScript(dataSource, TestConstantsUtil.DB_PATH_ADD_USERS);
     }
 
     @SneakyThrows
-    static void executeSqlScript(DataSource dataSource, String sql) {
+    public static void executeSqlScript(DataSource dataSource, String sql) {
         try (Connection connection = dataSource.getConnection()) {
             connection.setAutoCommit(true);
             ScriptUtils.executeSqlScript(
@@ -105,7 +106,7 @@ public class UserControllerTests {
     @Test
     @WithMockUser(username = "manager@example.com", roles = {"MANAGER"})
     @DisplayName("Update user role by ID")
-    void updateUserRole_ValidRequest_Success() throws Exception{
+    public void updateUserRole_ValidRequest_Success() throws Exception {
         User user = TestUserUtil.getFirstCustomer();
         Role role = TestUserUtil.getManagerRole();
         RoleNameRequestDto requestDto = TestUserUtil.getRoleNameRequestDto(role.getName());
@@ -123,7 +124,7 @@ public class UserControllerTests {
     @Test
     @WithMockUser(username = "customer1@example.com", roles = {"CUSTOMER"})
     @DisplayName("Get current user info")
-    void getCurrentUserInfo_ValidToken_Success() throws Exception {
+    public void getCurrentUserInfo_ValidToken_Success() throws Exception {
         User user = TestUserUtil.getFirstCustomer();
         UserResponseDto responseDto = TestUserUtil.getUserResponseDto(user);
 
@@ -137,7 +138,7 @@ public class UserControllerTests {
     @Test
     @WithMockUser(username = "customer1@example.com", roles = {"CUSTOMER"})
     @DisplayName("Update current user profile")
-    void updateCurrentUserInfo_ValidRequest_Success() throws Exception {
+    public void updateCurrentUserInfo_ValidRequest_Success() throws Exception {
         User user = TestUserUtil.getFirstCustomer();
         UserCreateRequestDto requestDto = TestUserUtil.getUserCreateRequestDto(user);
         UserResponseDto responseDto = TestUserUtil.getUserResponseDto(user);

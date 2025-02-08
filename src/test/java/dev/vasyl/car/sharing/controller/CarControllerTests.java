@@ -51,7 +51,7 @@ class CarControllerTests {
     private ObjectMapper objectMapper;
 
     @DynamicPropertySource
-    static void setProperties(DynamicPropertyRegistry registry) {
+    public static void setProperties(DynamicPropertyRegistry registry) {
         Dotenv dotenv = Dotenv.load();
         registry.add(TestConstantsUtil.JWT_EXPIRATION_VALUE_NAME,
                 () -> dotenv.get(TestConstantsUtil.JWT_EXPIRATION_ENV_NAME));
@@ -68,8 +68,9 @@ class CarControllerTests {
     }
 
     @BeforeAll
-    static void beforeAll(@Autowired WebApplicationContext applicationContext,
-                          @Autowired DataSource dataSource) {
+    public static void beforeAll(
+            @Autowired WebApplicationContext applicationContext,
+            @Autowired DataSource dataSource) {
         executeSqlScript(dataSource, TestConstantsUtil.DB_PATH_CLEAR_ALL);
 
         mockMvc = MockMvcBuilders
@@ -83,19 +84,19 @@ class CarControllerTests {
         executeSqlScript(dataSource, TestConstantsUtil.DB_PATH_CLEAR_ALL);
     }
 
-    @AfterEach
-    void afterEach(@Autowired DataSource dataSource) {
-        executeSqlScript(dataSource, TestConstantsUtil.DB_PATH_CLEAR_ALL);
-    }
-
     @BeforeEach
-    void beforeEach(@Autowired DataSource dataSource) {
+    public void beforeEach(@Autowired DataSource dataSource) {
         executeSqlScript(dataSource, TestConstantsUtil.DB_PATH_CLEAR_ALL);
         executeSqlScript(dataSource, TestConstantsUtil.DB_PATH_ADD_CARS);
     }
 
+    @AfterEach
+    public void afterEach(@Autowired DataSource dataSource) {
+        executeSqlScript(dataSource, TestConstantsUtil.DB_PATH_CLEAR_ALL);
+    }
+
     @SneakyThrows
-    static void executeSqlScript(DataSource dataSource, String sql) {
+    public static void executeSqlScript(DataSource dataSource, String sql) {
         try (Connection connection = dataSource.getConnection()) {
             connection.setAutoCommit(true);
             ScriptUtils.executeSqlScript(
@@ -107,7 +108,7 @@ class CarControllerTests {
     @Test
     @WithMockUser(username = "manager@example.com", roles = {"MANAGER"})
     @DisplayName("Validate that create a new car with valid data")
-    void saveCar_ValidRequestDto_Success() throws Exception {
+    public void saveCar_ValidRequestDto_Success() throws Exception {
         Car car = TestCarUtil.getFirstCar();
         CarCreateUpdateRequestDto createCarDto = TestCarUtil.getCarCreateUpdateRequestDto(car);
         CarResponseDto expected = TestCarUtil.getCarResponseDto(car);
@@ -125,7 +126,7 @@ class CarControllerTests {
 
     @Test
     @DisplayName("Verify that find all existent cars")
-    void getAllCars_WithValidData_Success() throws Exception {
+    public void getAllCars_WithValidData_Success() throws Exception {
         mockMvc.perform(get(TestConstantsUtil.CAR_CONTROLLER_PATH)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -151,7 +152,7 @@ class CarControllerTests {
     @Test
     @WithMockUser(username = "manager@example.com", roles = {"MANAGER"})
     @DisplayName("Verify that update existing car by valid id and new car data, should return carDto")
-    void updateCarById_ValidData_Success() throws Exception {
+    public void updateCarById_ValidData_Success() throws Exception {
         Car car = TestCarUtil.getLastCar();
         CarCreateUpdateRequestDto updateDto = TestCarUtil.getCarCreateUpdateRequestDto(car);
 
@@ -169,7 +170,7 @@ class CarControllerTests {
     @Test
     @WithMockUser(username = "manager@example.com", roles = {"MANAGER"})
     @DisplayName("Verify that delete existent car by valid ID")
-    void deleteCar_ValidCarId_Success() throws Exception {
+    public void deleteCar_ValidCarId_Success() throws Exception {
         Car car = TestCarUtil.getFirstCar();
 
         mockMvc.perform(delete(TestConstantsUtil.CAR_CONTROLLER_PATH + "/{id}", car.getId())

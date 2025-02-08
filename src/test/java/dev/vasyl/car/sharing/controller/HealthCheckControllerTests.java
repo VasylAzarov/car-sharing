@@ -10,6 +10,8 @@ import io.github.cdimascio.dotenv.Dotenv;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -18,13 +20,14 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+@AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class HealthCheckControllerTests {
-
     protected static MockMvc mockMvc;
 
     @DynamicPropertySource
-    static void setProperties(DynamicPropertyRegistry registry) {
+    public static void setProperties(DynamicPropertyRegistry registry) {
         Dotenv dotenv = Dotenv.load();
         registry.add(TestConstantsUtil.JWT_EXPIRATION_VALUE_NAME,
                 () -> dotenv.get(TestConstantsUtil.JWT_EXPIRATION_ENV_NAME));
@@ -41,7 +44,7 @@ class HealthCheckControllerTests {
     }
 
     @BeforeAll
-    static void beforeAll(
+    public static void beforeAll(
             @Autowired WebApplicationContext applicationContext) {
 
         mockMvc = MockMvcBuilders
@@ -51,7 +54,7 @@ class HealthCheckControllerTests {
     }
 
     @Test
-    void healthCheck_ReturnsOk() throws Exception {
+    public void healthCheck_ReturnsOk() throws Exception {
         mockMvc.perform(
                         get(TestConstantsUtil.HEALTH_CONTROLLER_PATH)
                                 .contentType(MediaType.APPLICATION_JSON))

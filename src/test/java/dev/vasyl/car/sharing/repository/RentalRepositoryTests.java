@@ -25,12 +25,12 @@ public class RentalRepositoryTests {
     private RentalRepository rentalRepository;
 
     @BeforeAll
-    private static void beforeAll(@Autowired DataSource dataSource) {
+    public static void beforeAll(@Autowired DataSource dataSource) {
         executeSqlScript(dataSource, TestConstantsUtil.DB_PATH_CLEAR_ALL);
     }
 
     @AfterAll
-    public static void stop(@Autowired DataSource dataSource) {
+    public static void afterAll(@Autowired DataSource dataSource) {
         executeSqlScript(dataSource, TestConstantsUtil.DB_PATH_CLEAR_ALL);
     }
 
@@ -43,7 +43,7 @@ public class RentalRepositoryTests {
     }
 
     @SneakyThrows
-    static void executeSqlScript(DataSource dataSource, String dbPath) {
+    public static void executeSqlScript(DataSource dataSource, String dbPath) {
         try (Connection connection = dataSource.getConnection()) {
             connection.setAutoCommit(true);
             ScriptUtils.executeSqlScript(

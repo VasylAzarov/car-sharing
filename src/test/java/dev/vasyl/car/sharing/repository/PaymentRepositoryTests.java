@@ -32,7 +32,7 @@ public class PaymentRepositoryTests {
     private PaymentRepository paymentRepository;
 
     @BeforeAll
-    private static void beforeAll(@Autowired DataSource dataSource) {
+    public static void beforeAll(@Autowired DataSource dataSource) {
         executeSqlScript(dataSource, TestConstantsUtil.DB_PATH_CLEAR_ALL);
         executeSqlScript(dataSource, TestConstantsUtil.DB_PATH_ADD_CARS);
         executeSqlScript(dataSource, TestConstantsUtil.DB_PATH_ADD_USERS);
@@ -46,7 +46,7 @@ public class PaymentRepositoryTests {
     }
 
     @SneakyThrows
-    static void executeSqlScript(DataSource dataSource, String dbPath) {
+    public static void executeSqlScript(DataSource dataSource, String dbPath) {
         try (Connection connection = dataSource.getConnection()) {
             connection.setAutoCommit(true);
             ScriptUtils.executeSqlScript(
