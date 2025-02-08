@@ -31,8 +31,15 @@ public class CarRepositoryTests {
 
     @BeforeAll
     public static void beforeAll(@Autowired DataSource dataSource) {
-        System.out.println("VARS");
-        System.out.println(System.getProperties().toString());
+        System.out.println("--------------");
+        System.out.println(System.getProperties().getProperty("PAYMENT_CALLBACK_DOMAIN"));
+        System.out.println(System.getProperties().getProperty("JWT_EXPIRATION"));
+        System.out.println(System.getProperties().getProperty("JWT_SECRET"));
+        System.out.println(System.getProperties().getProperty("payment.callback.domain"));
+        System.out.println(System.getProperties().getProperty("stripe.secret.key"));
+        System.out.println(System.getProperties().getProperty("jwt.expiration"));
+        System.out.println(System.getProperties().getProperty("jwt.secret"));
+        System.out.println("--------------");
         executeSqlScript(dataSource, TestConstantsUtil.DB_PATH_CLEAR_ALL);
         executeSqlScript(dataSource, TestConstantsUtil.DB_PATH_ADD_USERS);
     }
