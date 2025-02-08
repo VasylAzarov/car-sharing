@@ -1,14 +1,17 @@
 name: Debug Environment Variables
 
 on:
-  workflow_dispatch: # Позволяет запускать вручную
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   debug-env:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
     env:
       PAYMENT_CALLBACK_DOMAIN: ${{ secrets.PAYMENT_CALLBACK_DOMAIN }}
       STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
@@ -17,9 +20,39 @@ jobs:
       TELEGRAM_USERNAME: ${{ secrets.TELEGRAM_USERNAME }}
       TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
       TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Print Environment Variables
-        run: env
+      - name: Print Non-Sensitive Variables
+        run: |
+          echo "PAYMENT_CALLBACK_DOMAIN=$PAYMENT_CALLBACK_DOMAIN"
+          echo "JWT_EXPIRATION=$JWT_EXPIRATION"
+          echo "TELEGRAM_USERNAME=$TELEGRAM_USERNAME"
+
+      - name: Check If Secrets Are Set
+        run: |
+          if [[ -z "$STRIPE_SECRET_KEY" ]]; then
+            echo "STRIPE_SECRET_KEY is NOT set!"
+          else
+            echo "STRIPE_SECRET_KEY is set."
+          fi
+          
+          if [[ -z "$JWT_SECRET" ]]; then
+            echo "JWT_SECRET is NOT set!"
+          else
+            echo "JWT_SECRET is set."
+          fi
+          
+          if [[ -z "$TELEGRAM_TOKEN" ]]; then
+            echo "TELEGRAM_TOKEN is NOT set!"
+          else
+            echo "TELEGRAM_TOKEN is set."
+          fi
+          
+          if [[ -z "$TELEGRAM_CHAT_ID" ]]; then
+            echo "TELEGRAM_CHAT_ID is NOT set!"
+          else
+            echo "TELEGRAM_CHAT_ID is set."
+          fi
