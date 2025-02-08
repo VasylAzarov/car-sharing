@@ -1,46 +1,25 @@
 name: Debug Environment Variables
 
-on: [push, pull_request]
+on:
+  workflow_dispatch: # Позволяет запускать вручную
+  push:
+    branches:
+      - main
 
 jobs:
   debug-env:
     runs-on: ubuntu-latest
-
+    env:
+      PAYMENT_CALLBACK_DOMAIN: ${{ secrets.PAYMENT_CALLBACK_DOMAIN }}
+      STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+      JWT_EXPIRATION: ${{ secrets.JWT_EXPIRATION }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      TELEGRAM_USERNAME: ${{ secrets.TELEGRAM_USERNAME }}
+      TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Debug GitHub Variables
-        run: |
-          echo "🔍 Checking GitHub Variables"
-          echo "PAYMENT_CALLBACK_DOMAIN=${{ vars.PAYMENT_CALLBACK_DOMAIN }}"
-          echo "STRIPE_SECRET_KEY=${{ vars.STRIPE_SECRET_KEY }}"
-          echo "JWT_EXPIRATION=${{ vars.JWT_EXPIRATION }}"
-          echo "JWT_SECRET=${{ vars.JWT_SECRET }}"
-          echo "TELEGRAM_USERNAME=${{ vars.TELEGRAM_USERNAME }}"
-          echo "TELEGRAM_TOKEN=${{ vars.TELEGRAM_TOKEN }}"
-          echo "TELEGRAM_CHAT_ID=${{ vars.TELEGRAM_CHAT_ID }}"
-
-      - name: Debug GitHub Secrets
-        run: |
-          echo "🔍 Checking GitHub Secrets"
-          echo "PAYMENT_CALLBACK_DOMAIN=${{ secrets.PAYMENT_CALLBACK_DOMAIN }}"
-          echo "STRIPE_SECRET_KEY=${{ secrets.STRIPE_SECRET_KEY }}"
-          echo "JWT_EXPIRATION=${{ secrets.JWT_EXPIRATION }}"
-          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}"
-          echo "TELEGRAM_USERNAME=${{ secrets.TELEGRAM_USERNAME }}"
-          echo "TELEGRAM_TOKEN=${{ secrets.TELEGRAM_TOKEN }}"
-          echo "TELEGRAM_CHAT_ID=${{ secrets.TELEGRAM_CHAT_ID }}"
-
-      - name: Export to Environment
-        run: |
-          echo "PAYMENT_CALLBACK_DOMAIN=${{ vars.PAYMENT_CALLBACK_DOMAIN }}" >> $GITHUB_ENV
-          echo "STRIPE_SECRET_KEY=${{ vars.STRIPE_SECRET_KEY }}" >> $GITHUB_ENV
-          echo "JWT_EXPIRATION=${{ vars.JWT_EXPIRATION }}" >> $GITHUB_ENV
-          echo "JWT_SECRET=${{ vars.JWT_SECRET }}" >> $GITHUB_ENV
-          echo "TELEGRAM_USERNAME=${{ vars.TELEGRAM_USERNAME }}" >> $GITHUB_ENV
-          echo "TELEGRAM_TOKEN=${{ vars.TELEGRAM_TOKEN }}" >> $GITHUB_ENV
-          echo "TELEGRAM_CHAT_ID=${{ vars.TELEGRAM_CHAT_ID }}" >> $GITHUB_ENV
 
       - name: Print Environment Variables
         run: env
