@@ -1,6 +1,11 @@
+name: Java CI
+
+on: [push, pull_request]
+
 jobs:
   build:
     runs-on: ubuntu-latest
+
     env:
       PAYMENT_CALLBACK_DOMAIN: ${{ vars.PAYMENT_CALLBACK_DOMAIN }}
       STRIPE_SECRET_KEY: ${{ vars.STRIPE_SECRET_KEY }}
@@ -9,12 +14,21 @@ jobs:
       TELEGRAM_USERNAME: ${{ vars.TELEGRAM_USERNAME }}
       TELEGRAM_TOKEN: ${{ vars.TELEGRAM_TOKEN }}
       TELEGRAM_CHAT_ID: ${{ vars.TELEGRAM_CHAT_ID }}
+
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v2
+        with:
+          java-version: '21'
+          distribution: 'adopt'
+          cache: maven
 
       - name: Debug Environment Variables
-        run: env | grep -E 'PAYMENT_CALLBACK_DOMAIN|STRIPE_SECRET_KEY|JWT_EXPIRATION|JWT_SECRET|TELEGRAM_USERNAME|TELEGRAM_TOKEN|TELEGRAM_CHAT_ID'
+        run: |
+          echo "🔍 Checking Environment Variables"
+          env | grep -E 'PAYMENT_CALLBACK_DOMAIN|STRIPE_SECRET_KEY|JWT_EXPIRATION|JWT_SECRET|TELEGRAM_USERNAME|TELEGRAM_TOKEN|TELEGRAM_CHAT_ID'
 
-      - name: Run tests
-        run: mvn test
+      - name: Build with Maven
+        run: mvn --batch-mode --update-snapshots verify
