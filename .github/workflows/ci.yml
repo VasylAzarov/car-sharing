@@ -1,40 +1,20 @@
-name: CI Pipeline
-
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    env:
+      PAYMENT_CALLBACK_DOMAIN: ${{ vars.PAYMENT_CALLBACK_DOMAIN }}
+      STRIPE_SECRET_KEY: ${{ vars.STRIPE_SECRET_KEY }}
+      JWT_EXPIRATION: ${{ vars.JWT_EXPIRATION }}
+      JWT_SECRET: ${{ vars.JWT_SECRET }}
+      TELEGRAM_USERNAME: ${{ vars.TELEGRAM_USERNAME }}
+      TELEGRAM_TOKEN: ${{ vars.TELEGRAM_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ vars.TELEGRAM_CHAT_ID }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Set up JDK 21
-        uses: actions/setup-java@v2
-        with:
-          distribution: 'temurin'
-          java-version: '21'
-
       - name: Debug Environment Variables
-        run: |
-          echo "JWT_EXPIRATION=${{ vars.JWT_EXPIRATION }}"
-          echo "JWT_SECRET=${{ vars.JWT_SECRET }}"
-          echo "PAYMENT_CALLBACK_DOMAIN=${{ vars.PAYMENT_CALLBACK_DOMAIN }}"
-          echo "STRIPE_SECRET_KEY=${{ vars.STRIPE_SECRET_KEY }}"
-          echo "TELEGRAM_CHAT_ID=${{ vars.TELEGRAM_CHAT_ID }}"
-          echo "TELEGRAM_TOKEN=${{ vars.TELEGRAM_TOKEN }}"
-          echo "TELEGRAM_USERNAME=${{ vars.TELEGRAM_USERNAME }}"
+        run: env | grep -E 'PAYMENT_CALLBACK_DOMAIN|STRIPE_SECRET_KEY|JWT_EXPIRATION|JWT_SECRET|TELEGRAM_USERNAME|TELEGRAM_TOKEN|TELEGRAM_CHAT_ID'
 
-      - name: Build with Maven
-        run: mvn clean package
-
-      - name: Run Tests
+      - name: Run tests
         run: mvn test
-        continue-on-error: true
