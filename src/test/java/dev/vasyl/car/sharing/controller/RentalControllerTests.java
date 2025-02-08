@@ -20,7 +20,6 @@ import dev.vasyl.car.sharing.util.TestRentalUtil;
 import dev.vasyl.car.sharing.util.TestUserUtil;
 import java.sql.Connection;
 import javax.sql.DataSource;
-import io.github.cdimascio.dotenv.Dotenv;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -35,8 +34,6 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -49,23 +46,6 @@ class RentalControllerTests {
 
     @Autowired
     private ObjectMapper objectMapper;
-
-    @DynamicPropertySource
-    public static void setProperties(DynamicPropertyRegistry registry) {
-        Dotenv dotenv = Dotenv.load();
-        registry.add(TestConstantsUtil.JWT_EXPIRATION_VALUE_NAME,
-                () -> dotenv.get(TestConstantsUtil.JWT_EXPIRATION_ENV_NAME));
-        registry.add(TestConstantsUtil.JWT_SECRET_VALUE_NAME,
-                () -> dotenv.get(TestConstantsUtil.JWT_SECRET_ENV_NAME));
-        registry.add(TestConstantsUtil.STRIPE_SECRET_VALUE_NAME,
-                () -> dotenv.get(TestConstantsUtil.STRIPE_SECRET_ENV_NAME));
-        registry.add(TestConstantsUtil.TELEGRAM_SECRET_VALUE_NAME,
-                () -> dotenv.get(TestConstantsUtil.TELEGRAM_SECRET_ENV_NAME));
-        registry.add(TestConstantsUtil.TELEGRAM_USER_NAME_VALUE_NAME,
-                () -> dotenv.get(TestConstantsUtil.TELEGRAM_USER_NAME_ENV_NAME));
-        registry.add(TestConstantsUtil.TELEGRAM_CHAT_ID_VALUE_NAME,
-                () -> dotenv.get(TestConstantsUtil.TELEGRAM_CHAT_ID_ENV_NAME));
-    }
 
     @BeforeAll
     public static void beforeAll(
