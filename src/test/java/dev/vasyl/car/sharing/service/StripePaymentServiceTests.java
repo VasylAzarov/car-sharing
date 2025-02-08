@@ -23,9 +23,7 @@ import dev.vasyl.car.sharing.service.impl.StripePaymentService;
 import dev.vasyl.car.sharing.service.impl.TelegramNotificationService;
 import dev.vasyl.car.sharing.service.impl.UserServiceImpl;
 import dev.vasyl.car.sharing.util.TestPaymentUtil;
-import io.github.cdimascio.dotenv.Dotenv;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,7 +33,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
 public class StripePaymentServiceTests {
@@ -56,11 +53,6 @@ public class StripePaymentServiceTests {
     @Test
     @DisplayName("Should return PaymentResponseDto when valid payment request")
     void startPayment_shouldReturnPaymentResponseDto_whenValidRequest() {
-        Dotenv dotenv = Dotenv.load();
-        ReflectionTestUtils.setField(stripePaymentService, "stripeSecretKey",
-                Objects.requireNonNull(dotenv.get("STRIPE_SECRET_KEY")));
-        ReflectionTestUtils.setField(stripePaymentService, "domain",
-                Objects.requireNonNull(dotenv.get("PAYMENT_CALLBACK_DOMAIN")));
 
         Payment payment = TestPaymentUtil.getPaymentWithCompletedRental();
         PaymentRequestDto requestDto = TestPaymentUtil.getPaymentRequestDto(payment);
