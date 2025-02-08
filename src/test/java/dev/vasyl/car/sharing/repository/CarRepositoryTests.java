@@ -1,7 +1,6 @@
 package dev.vasyl.car.sharing.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 
 import dev.vasyl.car.sharing.model.Car;
 import dev.vasyl.car.sharing.util.TestCarUtil;
@@ -20,7 +19,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -31,15 +29,6 @@ public class CarRepositoryTests {
 
     @BeforeAll
     public static void beforeAll(@Autowired DataSource dataSource) {
-        System.out.println("--------------");
-        System.out.println(System.getProperties().getProperty("PAYMENT_CALLBACK_DOMAIN"));
-        System.out.println(System.getProperties().getProperty("JWT_EXPIRATION"));
-        System.out.println(System.getProperties().getProperty("JWT_SECRET"));
-        System.out.println(System.getProperties().getProperty("payment.callback.domain"));
-        System.out.println(System.getProperties().getProperty("stripe.secret.key"));
-        System.out.println(System.getProperties().getProperty("jwt.expiration"));
-        System.out.println(System.getProperties().getProperty("jwt.secret"));
-        System.out.println("--------------");
         executeSqlScript(dataSource, TestConstantsUtil.DB_PATH_CLEAR_ALL);
         executeSqlScript(dataSource, TestConstantsUtil.DB_PATH_ADD_USERS);
     }
