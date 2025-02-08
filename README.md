@@ -146,7 +146,7 @@ This project is a fully implemented online car-sharing service designed to autom
 
 This project uses SpringDoc OpenAPI for API documentation. Visit the Swagger UI at `http://localhost:8080/api/swagger-ui.html` to explore the endpoints.
 ## Video overview
-[link to loom video](not ready yet)
+[link to loom video](https://www.loom.com/share/581c064b18164057951d90b102b7becf)
 
 ## Summary
 This project successfully delivers an automated, efficient, and user-friendly car-sharing service, replacing outdated manual processes with a modern digital solution.
