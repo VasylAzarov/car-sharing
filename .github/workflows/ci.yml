@@ -25,16 +25,35 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Debug Environment Variables
+        run: |
+          echo "🔍 Checking Environment Variables"
+          echo "PAYMENT_CALLBACK_DOMAIN=$PAYMENT_CALLBACK_DOMAIN"
+          echo "STRIPE_SECRET_KEY=$STRIPE_SECRET_KEY"
+          echo "JWT_EXPIRATION=$JWT_EXPIRATION"
+          echo "JWT_SECRET=$JWT_SECRET"
+          echo "TELEGRAM_USERNAME=$TELEGRAM_USERNAME"
+          echo "TELEGRAM_TOKEN=$TELEGRAM_TOKEN"
+          echo "TELEGRAM_CHAT_ID=$TELEGRAM_CHAT_ID"
+
+      - name: Set Environment Variables Manually (Debug)
+        run: |
+          echo "PAYMENT_CALLBACK_DOMAIN=https://example.com" >> $GITHUB_ENV
+          echo "STRIPE_SECRET_KEY=sk_test_123456" >> $GITHUB_ENV
+          echo "JWT_EXPIRATION=900000" >> $GITHUB_ENV
+          echo "JWT_SECRET=mysecret" >> $GITHUB_ENV
+          echo "TELEGRAM_USERNAME=my_bot" >> $GITHUB_ENV
+          echo "TELEGRAM_TOKEN=123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11" >> $GITHUB_ENV
+          echo "TELEGRAM_CHAT_ID=415979271" >> $GITHUB_ENV
+
+      - name: Verify Environment Variables Again
+        run: env | grep -E 'PAYMENT_CALLBACK_DOMAIN|STRIPE_SECRET_KEY|JWT_EXPIRATION|JWT_SECRET|TELEGRAM_USERNAME|TELEGRAM_TOKEN|TELEGRAM_CHAT_ID'
+
       - name: Setup Java
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: '21'  # ✅ Оставляем твою версию Java 21
+          java-version: '17'
 
-      - name: Debug Environment Variables
-        run: |
-          echo "🔍 Checking Environment Variables"
-          env | grep -E 'PAYMENT_CALLBACK_DOMAIN|STRIPE_SECRET_KEY|JWT_EXPIRATION|JWT_SECRET|TELEGRAM_USERNAME|TELEGRAM_TOKEN|TELEGRAM_CHAT_ID'
-
-      - name: Run tests
+      - name: Build and Run Tests
         run: mvn clean test
