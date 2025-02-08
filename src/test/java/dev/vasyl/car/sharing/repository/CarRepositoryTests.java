@@ -1,6 +1,7 @@
 package dev.vasyl.car.sharing.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 
 import dev.vasyl.car.sharing.model.Car;
 import dev.vasyl.car.sharing.util.TestCarUtil;
@@ -19,6 +20,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -29,6 +31,8 @@ public class CarRepositoryTests {
 
     @BeforeAll
     public static void beforeAll(@Autowired DataSource dataSource) {
+        System.out.println("VARS");
+        System.out.println(System.getProperties().toString());
         executeSqlScript(dataSource, TestConstantsUtil.DB_PATH_CLEAR_ALL);
         executeSqlScript(dataSource, TestConstantsUtil.DB_PATH_ADD_USERS);
     }
