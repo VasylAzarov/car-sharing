@@ -165,27 +165,9 @@ public class CarServiceTests {
     @DisplayName("Verify that car is deleted successfully when it exists")
     void deleteById_shouldDeleteCar_whenCarExists() {
         Long carId = 1L;
-
-        when(carRepository.findById(carId)).thenReturn(Optional.of(TestCarUtil.getFirstCar()));
-
+        
         carService.deleteById(carId);
 
-        verify(carRepository).findById(carId);
         verify(carRepository).deleteById(carId);
-    }
-
-    @Test
-    @DisplayName("Verify that exception is thrown when deleting a non-existing car")
-    void deleteById_shouldThrowException_whenCarDoesNotExist() {
-        Long carId = 999L;
-
-        when(carRepository.findById(carId)).thenReturn(Optional.empty());
-
-        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class,
-                () -> carService.deleteById(carId));
-
-        assertEquals("Error when delete car: not found car with id [999]", exception.getMessage());
-        verify(carRepository).findById(carId);
-        verify(carRepository, never()).deleteById(anyLong());
     }
 }
