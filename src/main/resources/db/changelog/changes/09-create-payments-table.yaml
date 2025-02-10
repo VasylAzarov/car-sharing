@@ -29,6 +29,7 @@ databaseChangeLog:
                   type: bigint
                   constraints:
                     nullable: false
+                    unique: true
               - column:
                   name: session_url
                   type: longtext
@@ -62,3 +63,7 @@ databaseChangeLog:
             referencedTableName: rentals
             referencedColumnNames: id
             onDelete: cascade
+        - addUniqueConstraint:
+            tableName: payments
+            columnNames: rental_id
+            constraintName: uc_payments_rental_id

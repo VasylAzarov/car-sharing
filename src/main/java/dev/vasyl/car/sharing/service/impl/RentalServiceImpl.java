@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class RentalServiceImpl implements RentalService {
     private final CarRepository carRepository;
@@ -30,7 +31,6 @@ public class RentalServiceImpl implements RentalService {
     private final UserService userService;
 
     @Override
-    @Transactional
     public RentalResponseDto start(RentalCreateRequestDto requestDto) {
         Car car = carRepository.findById(requestDto.getCarId()).orElseThrow(
                 () -> new EntityNotFoundException("Error when start rental: car with id ["
@@ -79,7 +79,6 @@ public class RentalServiceImpl implements RentalService {
     }
 
     @Override
-    @Transactional
     public RentalResponseDto complete(RentalSetActualReturnRequestDto requestDto) {
         Rental rental = rentalRepository.findById(requestDto.rentalId()).orElseThrow(
                 () -> new EntityNotFoundException("Error when finding rental by id ["

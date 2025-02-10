@@ -2,6 +2,7 @@ package dev.vasyl.car.sharing.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -33,11 +34,13 @@ public class Rental {
 
     private LocalDate actualReturnDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY,
+            optional = false)
     @JoinColumn(name = "car_id", nullable = false)
     private Car car;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY,
+            optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 

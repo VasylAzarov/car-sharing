@@ -4,11 +4,9 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.net.URL;
@@ -25,7 +23,6 @@ import org.hibernate.annotations.SQLRestriction;
 @Table(name = "payments")
 public class Payment {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
@@ -36,8 +33,8 @@ public class Payment {
     @Enumerated(EnumType.STRING)
     private PaymentType type;
 
-    @ManyToOne
-    @JoinColumn(name = "rental_id", nullable = false)
+    @OneToOne
+    @MapsId
     private Rental rental;
 
     @Column(nullable = false,
@@ -45,7 +42,8 @@ public class Payment {
     private URL sessionUrl;
 
     @Column(nullable = false,
-            columnDefinition = "longtext")
+            columnDefinition = "longtext",
+            unique = true)
     private String sessionId;
 
     @Column(nullable = false)

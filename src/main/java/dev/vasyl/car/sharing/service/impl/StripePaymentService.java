@@ -18,7 +18,6 @@ import dev.vasyl.car.sharing.repository.PaymentRepository;
 import dev.vasyl.car.sharing.repository.RentalRepository;
 import dev.vasyl.car.sharing.service.PaymentService;
 import dev.vasyl.car.sharing.service.UserService;
-import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -29,8 +28,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class StripePaymentService implements PaymentService {
     private static final BigDecimal FINE_MULTIPLIER = new BigDecimal("1.5");
@@ -51,7 +52,6 @@ public class StripePaymentService implements PaymentService {
     private String domain;
 
     @Override
-    @Transactional
     public PaymentResponseDto startPayment(PaymentRequestDto requestDto) {
         Payment payment = getCreatedPayment(requestDto);
 
@@ -77,7 +77,6 @@ public class StripePaymentService implements PaymentService {
     }
 
     @Override
-    @Transactional
     public void verifySuccessfulPayment(Long paymentId) {
         Payment payment = findPaymentById(paymentId);
         payment.setStatus(Payment.PaymentStatus.PAID);
@@ -86,7 +85,6 @@ public class StripePaymentService implements PaymentService {
                 createNotificationForSuccessPayment(payment));
     }
 
-    @Transactional
     private Payment getCreatedPayment(PaymentRequestDto requestDto) {
         Rental rental = rentalRepository.findById(requestDto.getRentalId())
                 .orElseThrow(() -> new EntityNotFoundException(
