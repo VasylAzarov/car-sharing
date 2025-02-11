@@ -130,7 +130,7 @@ public class StripePaymentService implements PaymentService {
         }
     }
 
-    private static void checkIfRentalIsAlreadyClosed(Rental rental) {
+    private void checkIfRentalIsAlreadyClosed(Rental rental) {
         if (rental.getActualReturnDate() == null) {
             throw new StripePaymentCheckException("This rental hasn't been closed. "
                     + "You should close rental before payment");

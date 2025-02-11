@@ -47,8 +47,7 @@ public class CarServiceImpl implements CarService {
                         "Error when update car: not found car with id ["
                                 + id + "]"));
         carMapper.updateModelFromDto(carCreateUpdateRequestDto, car);
-        Car updatedCar = carRepository.save(car);
-        return carMapper.toDto(updatedCar);
+        return carMapper.toDto(carRepository.save(car));
     }
 
     @Override

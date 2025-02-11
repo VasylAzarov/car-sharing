@@ -4,7 +4,9 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -33,8 +35,10 @@ public class Payment {
     @Enumerated(EnumType.STRING)
     private PaymentType type;
 
-    @OneToOne
     @MapsId
+    @OneToOne(fetch = FetchType.LAZY,
+            optional = false)
+    @JoinColumn(name = "rental_id", nullable = false)
     private Rental rental;
 
     @Column(nullable = false,

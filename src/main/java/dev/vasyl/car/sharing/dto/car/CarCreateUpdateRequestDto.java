@@ -18,7 +18,7 @@ public class CarCreateUpdateRequestDto {
 
     @Schema(description = "Car brand",
             example = "BMW")
-    @NotNull(message = "Brand should not be empty")
+    @NotBlank(message = "Brand should not be empty")
     private String brand;
 
     @Schema(description = "Car type",
@@ -28,7 +28,6 @@ public class CarCreateUpdateRequestDto {
 
     @Schema(description = "Car inventory",
             example = "8")
-    @NotNull(message = "Inventory should not be empty")
     @Min(value = 0, message = "Inventory should not be less than 0")
     private int inventory;
 
