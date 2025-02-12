@@ -35,12 +35,12 @@ This project is a fully implemented online car-sharing service designed to autom
 
 ## Tech Stack
 - **Backend:** Java 21, Spring Boot 3.4.1
-- **Database:** MySQL
-- **Authentication:** JWT (jjwt-api)
-- **Payments:** Stripe API
+- **Database:** MySQL 8.0.33
+- **Authentication:** JWT (jjwt-api) 0.12.6
+- **Payments:** Stripe API 28.3.0
 - **Documentation:** SpringDoc OpenAPI
 - **Deployment:** Docker
-- **Other Libraries:** Lombok, MapStruct, Liquibase, TelegramBots API
+- **Other Libraries:** Lombok 1.18.36, MapStruct 1.6.3, Liquibase 4.29.2, TelegramBots API 5.2.0
 
 ### Database structure 
 ![img.png](img.png)
