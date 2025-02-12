@@ -40,7 +40,8 @@ public class RentalController {
     @Operation(summary = "Start rental",
             description = "Start rental with specific details."
                     + " Available for Costumer and Manager roles")
-    public RentalResponseDto startRental(@RequestBody @Valid RentalCreateRequestDto requestDto) {
+    public RentalResponseDto startRental(
+            @RequestBody @Valid RentalCreateRequestDto requestDto) {
         return rentalService.start(requestDto);
     }
 

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AsyncTelegramNotificationService {
 
-    private NotificationService notificationService;
+    private final NotificationService notificationService;
 
     @Async
     public void sendNotification(String message) {

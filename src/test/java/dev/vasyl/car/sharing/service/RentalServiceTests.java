@@ -47,8 +47,6 @@ public class RentalServiceTests {
     @Mock
     private RentalMapper rentalMapper;
     @Mock
-    private TelegramNotificationService telegramNotificationService;
-    @Mock
     private AsyncTelegramNotificationService asyncTelegramNotificationService;
     @Mock
     private UserService userService;
@@ -87,7 +85,6 @@ public class RentalServiceTests {
         verify(rentalRepository).save(rental);
         verify(rentalMapper).toDto(rental);
         verify(asyncTelegramNotificationService).sendNotification(expectedMessage);
-        verify(telegramNotificationService).sendNotification(expectedMessage);
     }
 
     @Test

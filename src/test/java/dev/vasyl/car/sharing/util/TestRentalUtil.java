@@ -35,19 +35,19 @@ public class TestRentalUtil {
         return List.of(
                 createRental(3L,
                         LocalDate.of(2024, 3, 1),
-                        LocalDate.of(2024, 3, 7),
+                        LocalDate.of(2025, 3, 7),
                         null,
                         carList.get(2),
                         TestUserUtil.getFirstCustomer()),
                 createRental(2L,
                         LocalDate.of(2024, 2, 1),
-                        LocalDate.of(2024, 2, 5),
-                        LocalDate.of(2024, 2, 5),
+                        LocalDate.of(2025, 2, 5),
+                        LocalDate.of(2025, 2, 5),
                         carList.get(1),
                         TestUserUtil.getFirstCustomer()),
                 createRental(1L,
                         LocalDate.of(2024, 1, 1),
-                        LocalDate.of(2024, 1, 10),
+                        LocalDate.of(2025, 1, 10),
                         null,
                         carList.get(0),
                         TestUserUtil.getSecondCustomer())
@@ -67,7 +67,7 @@ public class TestRentalUtil {
     }
 
     public static LocalDate getLocalDateForSearchingRental() {
-        return LocalDate.of(2024, 2, 1);
+        return LocalDate.of(2025, 2, 1);
     }
 
     public static RentalCreateRequestDto getRentalCreateRequestDto(Rental rental) {
