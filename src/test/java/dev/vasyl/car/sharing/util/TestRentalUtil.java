@@ -89,6 +89,20 @@ public class TestRentalUtil {
         return responseDto;
     }
 
+    public static String createNotificationForCreatedRental(User user, Car car, Rental rental) {
+        return "User with email ["
+                + user.getEmail()
+                + "] start new rental, car ["
+                + car.getBrand()
+                + " "
+                + car.getModel()
+                + "], dates: "
+                + rental.getRentalDate()
+                + " -> "
+                + rental.getReturnDate()
+                + "]";
+    }
+
     public static RentalSetActualReturnRequestDto getRentalSetActualReturnRequestDto(Rental rental) {
         return new RentalSetActualReturnRequestDto(rental.getId());
     }

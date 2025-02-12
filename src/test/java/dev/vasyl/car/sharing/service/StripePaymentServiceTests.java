@@ -5,8 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyLong;
-import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -15,6 +13,7 @@ import dev.vasyl.car.sharing.exception.EntityNotFoundException;
 import dev.vasyl.car.sharing.mapper.PaymentMapper;
 import dev.vasyl.car.sharing.model.Payment;
 import dev.vasyl.car.sharing.repository.PaymentRepository;
+import dev.vasyl.car.sharing.service.impl.AsyncTelegramNotificationService;
 import dev.vasyl.car.sharing.service.impl.StripePaymentService;
 import dev.vasyl.car.sharing.service.impl.TelegramNotificationService;
 import dev.vasyl.car.sharing.util.TestPaymentUtil;
@@ -37,6 +36,8 @@ public class StripePaymentServiceTests {
     private PaymentMapper paymentMapper;
     @Mock
     private TelegramNotificationService telegramNotificationService;
+    @Mock
+    private AsyncTelegramNotificationService asyncTelegramNotificationService;
 
     @InjectMocks
     private StripePaymentService stripePaymentService;
@@ -68,6 +69,8 @@ public class StripePaymentServiceTests {
     void verifySuccessfulPayment_shouldUpdatePaymentStatus() {
         Payment pendingPayment = TestPaymentUtil.getPaymentWithNotCompletedRental();
         Payment expectedPayment = TestPaymentUtil.getPaymentWithCompletedRental();
+        String expectedNotification =
+                TestPaymentUtil.createNotificationForTestSuccessPayment(expectedPayment);
 
         when(paymentRepository.findById(2L)).thenReturn(Optional.of(pendingPayment));
         when(paymentRepository.save(pendingPayment)).thenReturn(expectedPayment);
@@ -75,7 +78,8 @@ public class StripePaymentServiceTests {
         stripePaymentService.verifySuccessfulPayment(expectedPayment.getId());
 
         assertEquals(Payment.PaymentStatus.PAID, expectedPayment.getStatus());
-        verify(telegramNotificationService).sendNotification(anyString());
+        verify(telegramNotificationService).sendNotification(expectedNotification);
+        verify(asyncTelegramNotificationService).sendNotification(expectedNotification);
         verify(paymentRepository).findById(2L);
         verify(paymentRepository).save(pendingPayment);
     }

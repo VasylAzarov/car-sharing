@@ -20,6 +20,7 @@ import dev.vasyl.car.sharing.model.Rental;
 import dev.vasyl.car.sharing.model.User;
 import dev.vasyl.car.sharing.repository.CarRepository;
 import dev.vasyl.car.sharing.repository.RentalRepository;
+import dev.vasyl.car.sharing.service.impl.AsyncTelegramNotificationService;
 import dev.vasyl.car.sharing.service.impl.RentalServiceImpl;
 import dev.vasyl.car.sharing.service.impl.TelegramNotificationService;
 import dev.vasyl.car.sharing.util.TestCarUtil;
@@ -48,6 +49,8 @@ public class RentalServiceTests {
     @Mock
     private TelegramNotificationService telegramNotificationService;
     @Mock
+    private AsyncTelegramNotificationService asyncTelegramNotificationService;
+    @Mock
     private UserService userService;
 
     @InjectMocks
@@ -63,6 +66,8 @@ public class RentalServiceTests {
         Rental rental = TestRentalUtil.getNotCompletedRental();
         RentalResponseDto expectedResponseDto = TestRentalUtil.getRentalResponseDto(
                 TestRentalUtil.getNotCompletedRental());
+        String expectedMessage
+                = TestRentalUtil.createNotificationForCreatedRental(user, car, rental);
 
         when(carRepository.findById(1L)).thenReturn(Optional.of(car));
         when(userService.getCurrentUser()).thenReturn(user);
@@ -81,7 +86,8 @@ public class RentalServiceTests {
         verify(carRepository).save(car);
         verify(rentalRepository).save(rental);
         verify(rentalMapper).toDto(rental);
-        verify(telegramNotificationService).sendNotification(anyString());
+        verify(asyncTelegramNotificationService).sendNotification(expectedMessage);
+        verify(telegramNotificationService).sendNotification(expectedMessage);
     }
 
     @Test

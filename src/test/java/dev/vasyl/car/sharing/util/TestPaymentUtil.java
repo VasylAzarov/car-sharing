@@ -67,6 +67,14 @@ public class TestPaymentUtil {
         return responseDto;
     }
 
+    public static String createNotificationForTestSuccessPayment(Payment payment) {
+        return "success payment received by user with email ["
+                + payment.getRental().getUser().getEmail()
+                + "], amount ["
+                + payment.getAmountToPay()
+                + "]";
+    }
+
     public static Payment getPaymentWithCompletedRental() {
         return getListOfTwoPayments().get(0);
     }
