@@ -114,6 +114,7 @@ public class CarServiceTests {
     @Test
     @DisplayName("Verify that correct car is updated successfully")
     void update() {
+        Car firstCar = TestCarUtil.getFirstCar();
         doAnswer(invocation -> {
             CarCreateUpdateRequestDto dto = invocation.getArgument(0);
             Car car = invocation.getArgument(1);
@@ -124,28 +125,25 @@ public class CarServiceTests {
             car.setDailyFee(dto.getDailyFee());
             return null;
         }).when(carMapper)
-                .updateModelFromDto(TestCarUtil
-                                .getCarCreateUpdateRequestDto(TestCarUtil.getFirstCar()),
-                        TestCarUtil.getFirstCar());
-        when(carRepository.save(TestCarUtil.getFirstCar()))
-                .thenReturn(TestCarUtil.getFirstCar());
+                .updateModelFromDto(
+                        TestCarUtil.getCarCreateUpdateRequestDto(firstCar), firstCar);
+        when(carRepository.save(firstCar)).thenReturn(TestCarUtil.getFirstCar());
         when(carRepository.findById(1L))
-                .thenReturn(Optional.of(TestCarUtil.getFirstCar()));
-        when(carMapper.toDto(TestCarUtil.getFirstCar()))
-                .thenReturn(TestCarUtil.getCarResponseDto(TestCarUtil.getFirstCar()));
+                .thenReturn(Optional.of(firstCar));
+        when(carMapper.toDto(firstCar))
+                .thenReturn(TestCarUtil.getCarResponseDto(firstCar));
 
         CarResponseDto result = carService.update(1L,
-                TestCarUtil.getCarCreateUpdateRequestDto(TestCarUtil.getFirstCar()));
+                TestCarUtil.getCarCreateUpdateRequestDto(firstCar));
 
         assertNotNull(result);
         assertEquals(TestCarUtil.getCarResponseDto(
-                TestCarUtil.getFirstCar()).getId(), result.getId());
-        verify(carRepository).save(TestCarUtil.getFirstCar());
+                firstCar).getId(), result.getId());
+        verify(carRepository).save(firstCar);
         verify(carRepository).findById(1L);
         verify(carMapper).updateModelFromDto(TestCarUtil
-                .getCarCreateUpdateRequestDto(TestCarUtil.getFirstCar()),
-                TestCarUtil.getFirstCar());
-        verify(carMapper).toDto(TestCarUtil.getFirstCar());
+                .getCarCreateUpdateRequestDto(firstCar), firstCar);
+        verify(carMapper).toDto(firstCar);
     }
 
     @Test

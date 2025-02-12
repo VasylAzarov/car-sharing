@@ -69,14 +69,14 @@ public class StripePaymentServiceTests {
         Payment pendingPayment = TestPaymentUtil.getPaymentWithNotCompletedRental();
         Payment expectedPayment = TestPaymentUtil.getPaymentWithCompletedRental();
 
-        when(paymentRepository.findById(3L)).thenReturn(Optional.of(pendingPayment));
+        when(paymentRepository.findById(2L)).thenReturn(Optional.of(pendingPayment));
         when(paymentRepository.save(pendingPayment)).thenReturn(expectedPayment);
 
         stripePaymentService.verifySuccessfulPayment(expectedPayment.getId());
 
         assertEquals(Payment.PaymentStatus.PAID, expectedPayment.getStatus());
         verify(telegramNotificationService).sendNotification(anyString());
-        verify(paymentRepository).findById(3L);
+        verify(paymentRepository).findById(2L);
         verify(paymentRepository).save(pendingPayment);
     }
 
