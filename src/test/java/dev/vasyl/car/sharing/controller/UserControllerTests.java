@@ -89,7 +89,7 @@ public class UserControllerTests {
         Role role = TestUserUtil.getManagerRole();
         RoleNameRequestDto requestDto = TestUserUtil.getRoleNameRequestDto(role.getName());
         UserUpdateResponseDto responseDto = TestUserUtil.getUserUpdateResponseDto(user);
-        userRepository.findAll();
+
         mockMvc.perform(
                         put(TestConstantsUtil.USER_CONTROLLER_PATH
                                 + "/{id}/role", responseDto.getId())
@@ -105,10 +105,10 @@ public class UserControllerTests {
     public void updateUserRole_invalidRequest_notFound() throws Exception {
         Role role = TestUserUtil.getManagerRole();
         RoleNameRequestDto requestDto = TestUserUtil.getRoleNameRequestDto(role.getName());
-        userRepository.findAll();
+
         mockMvc.perform(
                         put(TestConstantsUtil.USER_CONTROLLER_PATH
-                                + "/{id}/role", 99L)
+                                + "/{id}/role", 99)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(requestDto)))
                 .andExpect(status().isNotFound())
