@@ -45,9 +45,6 @@ public class UserControllerTests {
     private ObjectMapper objectMapper;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private WebApplicationContext applicationContext;
 
     @BeforeAll
@@ -84,7 +81,7 @@ public class UserControllerTests {
     @Test
     @WithMockUser(username = "manager@example.com", roles = {"MANAGER"})
     @DisplayName("Update user role by ID")
-    public void updateUserRole_validRequest_success() throws Exception {
+    public void updateUserRole_ValidRequest_Success() throws Exception {
         User user = TestUserUtil.getFirstCustomer();
         Role role = TestUserUtil.getManagerRole();
         RoleNameRequestDto requestDto = TestUserUtil.getRoleNameRequestDto(role.getName());
@@ -102,7 +99,7 @@ public class UserControllerTests {
     @Test
     @WithMockUser(username = "manager@example.com", roles = {"MANAGER"})
     @DisplayName("Update user role by incorrect ID")
-    public void updateUserRole_invalidRequest_notFound() throws Exception {
+    public void updateUserRole_InvalidRequest_NotFound() throws Exception {
         Role role = TestUserUtil.getManagerRole();
         RoleNameRequestDto requestDto = TestUserUtil.getRoleNameRequestDto(role.getName());
 
