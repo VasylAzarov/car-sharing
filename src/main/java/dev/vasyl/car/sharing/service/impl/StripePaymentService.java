@@ -42,7 +42,7 @@ public class StripePaymentService implements PaymentService {
     private final RentalRepository rentalRepository;
     private final PaymentRepository paymentRepository;
     private final PaymentMapper paymentMapper;
-    private final TelegramNotificationService telegramNotificationService;
+    private final AsyncTelegramNotificationService asyncTelegramNotificationService;
     private final UserService userService;
 
     @Value("${stripe.secret.key}")
@@ -81,7 +81,7 @@ public class StripePaymentService implements PaymentService {
         Payment payment = findPaymentById(paymentId);
         payment.setStatus(Payment.PaymentStatus.PAID);
         paymentRepository.save(payment);
-        telegramNotificationService.sendNotification(
+        asyncTelegramNotificationService.sendNotification(
                 createNotificationForSuccessPayment(payment));
     }
 

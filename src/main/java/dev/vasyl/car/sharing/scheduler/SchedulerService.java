@@ -2,7 +2,7 @@ package dev.vasyl.car.sharing.scheduler;
 
 import dev.vasyl.car.sharing.model.Rental;
 import dev.vasyl.car.sharing.repository.RentalRepository;
-import dev.vasyl.car.sharing.service.impl.TelegramNotificationService;
+import dev.vasyl.car.sharing.service.impl.AsyncTelegramNotificationService;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class SchedulerService {
     private final RentalRepository rentalRepository;
-    private final TelegramNotificationService telegramNotificationService;
+    private final AsyncTelegramNotificationService asyncTelegramNotificationService;
 
     @Scheduled(cron = "0 0 10 * * *")
     public void runScheduledTaskEachDay10AM() {
@@ -25,7 +25,7 @@ public class SchedulerService {
 
         for (Rental rental : overdueRentals) {
             String message = generateOverdueRentalMessage(rental);
-            telegramNotificationService.sendNotification(message);
+            asyncTelegramNotificationService.sendNotification(message);
         }
     }
 

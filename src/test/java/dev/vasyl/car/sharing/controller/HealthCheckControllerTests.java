@@ -21,7 +21,6 @@ import org.springframework.web.context.WebApplicationContext;
 @AutoConfigureMockMvc
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class HealthCheckControllerTests {
     protected static MockMvc mockMvc;
 

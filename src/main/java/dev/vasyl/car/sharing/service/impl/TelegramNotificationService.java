@@ -3,7 +3,6 @@ package dev.vasyl.car.sharing.service.impl;
 import dev.vasyl.car.sharing.exception.TelegramNotificationException;
 import dev.vasyl.car.sharing.service.NotificationService;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -44,7 +43,6 @@ public class TelegramNotificationService
     public void onUpdateReceived(Update update) {
     }
 
-    @Async
     @Override
     public void sendNotification(String message) {
         SendMessage sendMessage = new SendMessage(chatId, message);

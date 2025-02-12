@@ -27,7 +27,7 @@ public class RentalServiceImpl implements RentalService {
     private final CarRepository carRepository;
     private final RentalRepository rentalRepository;
     private final RentalMapper rentalMapper;
-    private final TelegramNotificationService telegramNotificationService;
+    private final AsyncTelegramNotificationService asyncTelegramNotificationService;
     private final UserService userService;
 
     @Override
@@ -49,7 +49,7 @@ public class RentalServiceImpl implements RentalService {
         carRepository.save(car);
         rentalRepository.save(rental);
 
-        telegramNotificationService.sendNotification(
+        asyncTelegramNotificationService.sendNotification(
                 createNotificationForCreatedRental(user, car, rental));
 
         return rentalMapper.toDto(rental);
