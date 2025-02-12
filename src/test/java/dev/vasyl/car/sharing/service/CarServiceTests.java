@@ -127,7 +127,7 @@ public class CarServiceTests {
         }).when(carMapper)
                 .updateModelFromDto(
                         TestCarUtil.getCarCreateUpdateRequestDto(firstCar), firstCar);
-        when(carRepository.save(firstCar)).thenReturn(TestCarUtil.getFirstCar());
+        when(carRepository.save(firstCar)).thenReturn(firstCar);
         when(carRepository.findById(1L))
                 .thenReturn(Optional.of(firstCar));
         when(carMapper.toDto(firstCar))
