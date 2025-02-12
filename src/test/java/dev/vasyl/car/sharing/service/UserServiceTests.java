@@ -75,12 +75,12 @@ public class UserServiceTests {
         UserResponseDto response = userService.register(requestDto);
 
         assertNotNull(response);
-        verify(userRepository).existsByEmail(any(String.class));
-        verify(userMapper).toModel(any(UserCreateRequestDto.class));
-        verify(passwordEncoder).encode(any(String.class));
+        verify(userRepository).existsByEmail(requestDto.getEmail());
+        verify(userMapper).toModel(requestDto);
+        verify(passwordEncoder).encode(requestDto.getPassword());
         verify(roleRepository).findByName(Role.RoleName.CUSTOMER);
-        verify(userRepository).save(any(User.class));
-        verify(userMapper).toUserResponse(any(User.class));
+        verify(userRepository).save(user);
+        verify(userMapper).toUserResponse(user);
     }
 
     @Test
@@ -97,7 +97,7 @@ public class UserServiceTests {
         assertEquals("user with email [" + userCreateRequestDto.getEmail() + "] already exist",
                 exception.getMessage());
 
-        verify(userRepository).existsByEmail(any(String.class));
+        verify(userRepository).existsByEmail(userCreateRequestDto.getEmail());
     }
 
     @Test
@@ -108,19 +108,19 @@ public class UserServiceTests {
         RoleNameRequestDto roleNameRequestDto = getRoleNameRequestDto(Role.RoleName.MANAGER);
         UserUpdateResponseDto responseDto = getUserUpdateResponseDto(user);
 
-        when(userRepository.findById(any(Long.class))).thenReturn(Optional.of(user));
+        when(userRepository.findById(2L)).thenReturn(Optional.of(user));
         when(roleRepository.findByName(roleNameRequestDto.roleName())).thenReturn(Optional.of(role));
-        when(userRepository.save(any(User.class))).thenReturn(user);
+        when(userRepository.save(user)).thenReturn(user);
 
-        when(userMapper.toUserUpdateResponseDto(any(User.class))).thenReturn(responseDto);
+        when(userMapper.toUserUpdateResponseDto(user)).thenReturn(responseDto);
 
         UserUpdateResponseDto response = userService.updateRole(user.getId(), roleNameRequestDto);
 
         assertNotNull(response);
         assertEquals(responseDto.getNewRole(), response.getNewRole());
-        verify(userRepository).findById(any(Long.class));
+        verify(userRepository).findById(2L);
         verify(roleRepository).findByName(roleNameRequestDto.roleName());
-        verify(userRepository).save(any(User.class));
+        verify(userRepository).save(user);
     }
 
     @Test
@@ -134,7 +134,7 @@ public class UserServiceTests {
         EntityNotFoundException exception = assertThrows(EntityNotFoundException.class,
                 () -> userService.updateRole(userId, roleNameRequestDto));
         assertEquals("Error when update user role: user id not found, id [1]", exception.getMessage());
-        verify(userRepository).findById(any(Long.class));
+        verify(userRepository).findById(1L);
     }
 
     @Test
@@ -143,14 +143,14 @@ public class UserServiceTests {
         RoleNameRequestDto roleNameRequestDto = getRoleNameRequestDto(Role.RoleName.MANAGER);
         User user = getManager();
 
-        when(userRepository.findById(any(Long.class))).thenReturn(Optional.of(user));
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         when(roleRepository.findByName(roleNameRequestDto.roleName())).thenReturn(Optional.empty());
 
         EntityNotFoundException exception = assertThrows(EntityNotFoundException.class,
                 () -> userService.updateRole(user.getId(), roleNameRequestDto));
         assertEquals("Error when update user role: role name not found, name [MANAGER]",
                 exception.getMessage());
-        verify(userRepository).findById(any(Long.class));
+        verify(userRepository).findById(1L);
         verify(roleRepository).findByName((roleNameRequestDto.roleName()));
     }
 

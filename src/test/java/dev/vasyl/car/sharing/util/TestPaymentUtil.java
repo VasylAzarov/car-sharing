@@ -55,12 +55,6 @@ public class TestPaymentUtil {
         );
     }
 
-    public static PaymentRequestDto getPaymentRequestDto(Payment payment) {
-        PaymentRequestDto requestDto = new PaymentRequestDto();
-        requestDto.setRentalId(payment.getRental().getId());
-        return requestDto;
-    }
-
     public static PaymentResponseDto getPaymentResponseDto(Payment payment) {
         PaymentResponseDto responseDto = new PaymentResponseDto();
         responseDto.setId(payment.getId());

@@ -84,7 +84,7 @@ public class UserControllerTests {
     @Test
     @WithMockUser(username = "manager@example.com", roles = {"MANAGER"})
     @DisplayName("Update user role by ID")
-    public void updateUserRole_ValidRequest_Success() throws Exception {
+    public void updateUserRole_validRequest_success() throws Exception {
         User user = TestUserUtil.getFirstCustomer();
         Role role = TestUserUtil.getManagerRole();
         RoleNameRequestDto requestDto = TestUserUtil.getRoleNameRequestDto(role.getName());
@@ -97,6 +97,23 @@ public class UserControllerTests {
                                 .content(objectMapper.writeValueAsString(requestDto)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.newRole", is(responseDto.getNewRole())));
+    }
+
+    @Test
+    @WithMockUser(username = "manager@example.com", roles = {"MANAGER"})
+    @DisplayName("Update user role by incorrect ID")
+    public void updateUserRole_invalidRequest_notFound() throws Exception {
+        Role role = TestUserUtil.getManagerRole();
+        RoleNameRequestDto requestDto = TestUserUtil.getRoleNameRequestDto(role.getName());
+        userRepository.findAll();
+        mockMvc.perform(
+                        put(TestConstantsUtil.USER_CONTROLLER_PATH
+                                + "/{id}/role", 99L)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(requestDto)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message",
+                        is("Error when update user role: user id not found, id [99]")));
     }
 
     @Test

@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -65,8 +64,8 @@ public class CarServiceTests {
         Car car = TestCarUtil.getFirstCar();
         CarResponseDto carResponseDto = TestCarUtil.getCarResponseDto(car);
 
-        when(carRepository.findById(anyLong())).thenReturn(Optional.of(car));
-        when(carMapper.toDto(any(Car.class))).thenReturn(carResponseDto);
+        when(carRepository.findById(1L)).thenReturn(Optional.of(car));
+        when(carMapper.toDto(car)).thenReturn(carResponseDto);
 
         CarResponseDto result = carService.getById(1L);
 
@@ -74,12 +73,13 @@ public class CarServiceTests {
         assertEquals(TestCarUtil.getCarResponseDto(
                 TestCarUtil.getFirstCar()).getId(), result.getId());
         verify(carRepository).findById(1L);
+        verify(carMapper).toDto(car);
     }
 
     @Test
     @DisplayName("Verify that exception is thrown when car doesn't exist")
     void findById_shouldThrowException_whenCarDoesNotExist() {
-        when(carRepository.findById(anyLong())).thenReturn(Optional.empty());
+        when(carRepository.findById(1L)).thenReturn(Optional.empty());
 
         EntityNotFoundException exception = assertThrows(
                 EntityNotFoundException.class,
@@ -98,17 +98,17 @@ public class CarServiceTests {
         CarCreateUpdateRequestDto requestDto
                 = TestCarUtil.getCarCreateUpdateRequestDto(car);
 
-        when(carMapper.toModel(any(CarCreateUpdateRequestDto.class))).thenReturn(car);
-        when(carRepository.save(any(Car.class))).thenReturn(car);
-        when(carMapper.toDto(any(Car.class))).thenReturn(carResponseDto);
+        when(carMapper.toModel(requestDto)).thenReturn(car);
+        when(carRepository.save(car)).thenReturn(car);
+        when(carMapper.toDto(car)).thenReturn(carResponseDto);
 
         CarResponseDto result = carService.save(requestDto);
 
         assertNotNull(result);
         assertEquals(TestCarUtil.getCarResponseDto(car).getId(), result.getId());
-        verify(carRepository).save(any(Car.class));
-        verify(carMapper).toModel(any(CarCreateUpdateRequestDto.class));
-        verify(carMapper).toDto(any(Car.class));
+        verify(carRepository).save(car);
+        verify(carMapper).toModel(requestDto);
+        verify(carMapper).toDto(car);
     }
 
     @Test
@@ -124,12 +124,14 @@ public class CarServiceTests {
             car.setDailyFee(dto.getDailyFee());
             return null;
         }).when(carMapper)
-                .updateModelFromDto(any(CarCreateUpdateRequestDto.class), any(Car.class));
-        when(carRepository.save(any(Car.class)))
+                .updateModelFromDto(TestCarUtil
+                                .getCarCreateUpdateRequestDto(TestCarUtil.getFirstCar()),
+                        TestCarUtil.getFirstCar());
+        when(carRepository.save(TestCarUtil.getFirstCar()))
                 .thenReturn(TestCarUtil.getFirstCar());
-        when(carRepository.findById(any(Long.class)))
+        when(carRepository.findById(1L))
                 .thenReturn(Optional.of(TestCarUtil.getFirstCar()));
-        when(carMapper.toDto(any(Car.class)))
+        when(carMapper.toDto(TestCarUtil.getFirstCar()))
                 .thenReturn(TestCarUtil.getCarResponseDto(TestCarUtil.getFirstCar()));
 
         CarResponseDto result = carService.update(1L,
@@ -138,10 +140,12 @@ public class CarServiceTests {
         assertNotNull(result);
         assertEquals(TestCarUtil.getCarResponseDto(
                 TestCarUtil.getFirstCar()).getId(), result.getId());
-        verify(carRepository).save(any(Car.class));
-        verify(carRepository).findById(any(Long.class));
-        verify(carMapper).updateModelFromDto(any(CarCreateUpdateRequestDto.class), any(Car.class));
-        verify(carMapper).toDto(any(Car.class));
+        verify(carRepository).save(TestCarUtil.getFirstCar());
+        verify(carRepository).findById(1L);
+        verify(carMapper).updateModelFromDto(TestCarUtil
+                .getCarCreateUpdateRequestDto(TestCarUtil.getFirstCar()),
+                TestCarUtil.getFirstCar());
+        verify(carMapper).toDto(TestCarUtil.getFirstCar());
     }
 
     @Test
@@ -165,7 +169,7 @@ public class CarServiceTests {
     @DisplayName("Verify that car is deleted successfully when it exists")
     void deleteById_shouldDeleteCar_whenCarExists() {
         Long carId = 1L;
-        
+
         carService.deleteById(carId);
 
         verify(carRepository).deleteById(carId);

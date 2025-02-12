@@ -52,6 +52,7 @@ public class TestCarUtil {
     public static Car getFirstCar() {
         return getListOfThreeCars().get(0);
     }
+
     public static Car getLastCar() {
         return getListOfThreeCars().get(2);
     }

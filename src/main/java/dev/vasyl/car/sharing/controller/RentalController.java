@@ -6,6 +6,7 @@ import dev.vasyl.car.sharing.dto.rental.RentalSetActualReturnRequestDto;
 import dev.vasyl.car.sharing.service.RentalService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +40,7 @@ public class RentalController {
     @Operation(summary = "Start rental",
             description = "Start rental with specific details."
                     + " Available for Costumer and Manager roles")
-    public RentalResponseDto startRental(@RequestBody RentalCreateRequestDto requestDto) {
+    public RentalResponseDto startRental(@RequestBody @Valid RentalCreateRequestDto requestDto) {
         return rentalService.start(requestDto);
     }
 
@@ -74,7 +75,7 @@ public class RentalController {
             description = "Complete rental."
                     + " Available for Costumer and Manager roles")
     public RentalResponseDto completeRental(
-            @RequestBody RentalSetActualReturnRequestDto requestDto) {
+            @RequestBody @Valid RentalSetActualReturnRequestDto requestDto) {
         return rentalService.complete(requestDto);
     }
 }

@@ -69,23 +69,24 @@ public class StripePaymentServiceTests {
         Payment pendingPayment = TestPaymentUtil.getPaymentWithNotCompletedRental();
         Payment expectedPayment = TestPaymentUtil.getPaymentWithCompletedRental();
 
-        when(paymentRepository.findById(anyLong())).thenReturn(Optional.of(pendingPayment));
-        when(paymentRepository.save(any(Payment.class))).thenReturn(expectedPayment);
+        when(paymentRepository.findById(3L)).thenReturn(Optional.of(pendingPayment));
+        when(paymentRepository.save(pendingPayment)).thenReturn(expectedPayment);
 
         stripePaymentService.verifySuccessfulPayment(expectedPayment.getId());
 
         assertEquals(Payment.PaymentStatus.PAID, expectedPayment.getStatus());
         verify(telegramNotificationService).sendNotification(anyString());
-        verify(paymentRepository).save(any(Payment.class));
+        verify(paymentRepository).findById(3L);
+        verify(paymentRepository).save(pendingPayment);
     }
 
     @Test
     @DisplayName("Should throw EntityNotFoundException when payment not found")
     void verifySuccessfulPayment_shouldThrowException_whenPaymentNotFound() {
-        when(paymentRepository.findById(anyLong())).thenReturn(Optional.empty());
+        when(paymentRepository.findById(1L)).thenReturn(Optional.empty());
 
         assertThrows(EntityNotFoundException.class,
                 () -> stripePaymentService.verifySuccessfulPayment(1L));
-        verify(paymentRepository).findById(anyLong());
+        verify(paymentRepository).findById(1L);
     }
 }

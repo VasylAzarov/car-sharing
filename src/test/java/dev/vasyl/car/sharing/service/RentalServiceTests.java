@@ -64,19 +64,23 @@ public class RentalServiceTests {
         RentalResponseDto expectedResponseDto = TestRentalUtil.getRentalResponseDto(
                 TestRentalUtil.getNotCompletedRental());
 
-        when(carRepository.findById(anyLong())).thenReturn(Optional.of(car));
+        when(carRepository.findById(1L)).thenReturn(Optional.of(car));
         when(userService.getCurrentUser()).thenReturn(user);
-        when(rentalMapper.toModelByDtoAndCarAndUser(any(), any(), any())).thenReturn(rental);
-        when(carRepository.save(any(Car.class))).thenReturn(car);
-        when(rentalRepository.save(any(Rental.class))).thenReturn(rental);
-        when(rentalMapper.toDto(any(Rental.class))).thenReturn(expectedResponseDto);
+        when(rentalMapper.toModelByDtoAndCarAndUser(requestDto, car, user)).thenReturn(rental);
+        when(carRepository.save(car)).thenReturn(car);
+        when(rentalRepository.save(rental)).thenReturn(rental);
+        when(rentalMapper.toDto(rental)).thenReturn(expectedResponseDto);
 
         RentalResponseDto result = rentalService.start(requestDto);
 
         assertNotNull(result);
         assertEquals(expectedResponseDto.getCarId(), result.getCarId());
-        verify(carRepository).save(any(Car.class));
-        verify(rentalRepository).save(any(Rental.class));
+        verify(carRepository).findById(1L);
+        verify(userService).getCurrentUser();
+        verify(rentalMapper).toModelByDtoAndCarAndUser(requestDto, car, user);
+        verify(carRepository).save(car);
+        verify(rentalRepository).save(rental);
+        verify(rentalMapper).toDto(rental);
         verify(telegramNotificationService).sendNotification(anyString());
     }
 
@@ -88,7 +92,7 @@ public class RentalServiceTests {
         Car car = TestCarUtil.getFirstCar();
         car.setInventory(0);
 
-        when(carRepository.findById(anyLong())).thenReturn(Optional.of(car));
+        when(carRepository.findById(1L)).thenReturn(Optional.of(car));
 
         NoAvailableCarsException exception = assertThrows(
                 NoAvailableCarsException.class,
@@ -104,7 +108,7 @@ public class RentalServiceTests {
     void start_shouldThrowEntityNotFoundException_whenCarNotFound() {
         RentalCreateRequestDto requestDto = TestRentalUtil.getRentalCreateRequestDto(
                 TestRentalUtil.getNotCompletedRental());
-        when(carRepository.findById(anyLong())).thenReturn(Optional.empty());
+        when(carRepository.findById(1L)).thenReturn(Optional.empty());
 
         EntityNotFoundException exception = assertThrows(
                 EntityNotFoundException.class,
@@ -129,9 +133,9 @@ public class RentalServiceTests {
                 20
         );
 
-        when(rentalRepository.findAllByUserIdAndActualReturnDateIsNull(any(Pageable.class), anyLong()))
+        when(rentalRepository.findAllByUserIdAndActualReturnDateIsNull(pageable, 1L))
                 .thenReturn(rentalsPage);
-        when(rentalMapper.toDtoPage(any(Page.class)))
+        when(rentalMapper.toDtoPage(rentalsPage))
                 .thenReturn(new PageImpl<>(rentalResponseDtos));
 
         Page<RentalResponseDto> result = rentalService.getByParams(
@@ -143,7 +147,7 @@ public class RentalServiceTests {
         assertNotNull(result);
         assertEquals(1, result.getTotalElements());
         verify(rentalRepository).findAllByUserIdAndActualReturnDateIsNull(any(Pageable.class), anyLong());
-        verify(rentalMapper).toDtoPage(any(Page.class));
+        verify(rentalMapper).toDtoPage(rentalsPage);
     }
 
     @Test
@@ -154,9 +158,11 @@ public class RentalServiceTests {
                 TestRentalUtil.getDefaultRentalPageable(),
                 20);
 
-        when(rentalRepository.findAllByUserIdAndActualReturnDateIsNotNull(any(Pageable.class), anyLong()))
+        when(rentalRepository.findAllByUserIdAndActualReturnDateIsNotNull(
+                TestRentalUtil.getDefaultRentalPageable(),
+                1L))
                 .thenReturn(rentalsPage);
-        when(rentalMapper.toDtoPage(any(Page.class)))
+        when(rentalMapper.toDtoPage(rentalsPage))
                 .thenReturn(new PageImpl<>(List.of(TestRentalUtil.getRentalResponseDto(
                         TestRentalUtil.getCompletedRental()))));
 
@@ -167,8 +173,10 @@ public class RentalServiceTests {
 
         assertNotNull(result);
         assertEquals(1, result.getTotalElements());
-        verify(rentalRepository).findAllByUserIdAndActualReturnDateIsNotNull(any(Pageable.class), anyLong());
-        verify(rentalMapper).toDtoPage(any(Page.class));
+        verify(rentalRepository).findAllByUserIdAndActualReturnDateIsNotNull(
+                TestRentalUtil.getDefaultRentalPageable(),
+                1L);
+        verify(rentalMapper).toDtoPage(rentalsPage);
     }
 
     @Test
@@ -177,20 +185,20 @@ public class RentalServiceTests {
         Rental rental = TestRentalUtil.getNotCompletedRental();
         RentalResponseDto expectedResponseDto = TestRentalUtil.getRentalResponseDto(rental);
 
-        when(rentalRepository.findById(anyLong())).thenReturn(Optional.of(rental));
-        when(rentalMapper.toDto(any(Rental.class))).thenReturn(expectedResponseDto);
+        when(rentalRepository.findById(1L)).thenReturn(Optional.of(rental));
+        when(rentalMapper.toDto(rental)).thenReturn(expectedResponseDto);
 
         RentalResponseDto result = rentalService.getById(1L);
 
         assertNotNull(result);
         assertEquals(expectedResponseDto.getCarId(), result.getCarId());
-        verify(rentalRepository).findById(anyLong());
+        verify(rentalRepository).findById(1L);
     }
 
     @Test
     @DisplayName("Verify exception is thrown when rental not found by ID")
     void getById_shouldThrowEntityNotFoundException_whenRentalNotFound() {
-        when(rentalRepository.findById(anyLong())).thenReturn(Optional.empty());
+        when(rentalRepository.findById(1L)).thenReturn(Optional.empty());
 
         EntityNotFoundException exception = assertThrows(
                 EntityNotFoundException.class,
@@ -207,24 +215,24 @@ public class RentalServiceTests {
         Car car = TestCarUtil.getFirstCar();
         RentalResponseDto expectedResponseDto = TestRentalUtil.getRentalResponseDto(rental);
 
-        when(rentalRepository.findById(anyLong())).thenReturn(Optional.of(rental));
-        when(carRepository.findById(anyLong())).thenReturn(Optional.of(car));
-        when(rentalMapper.toDto(any(Rental.class))).thenReturn(expectedResponseDto);
+        when(rentalRepository.findById(1L)).thenReturn(Optional.of(rental));
+        when(carRepository.findById(1L)).thenReturn(Optional.of(car));
+        when(rentalMapper.toDto(rental)).thenReturn(expectedResponseDto);
 
         RentalResponseDto result = rentalService.complete(
                 new RentalSetActualReturnRequestDto(1L));
 
         assertNotNull(result);
-        verify(rentalRepository).findById(anyLong());
-        verify(carRepository).findById(anyLong());
-        verify(rentalRepository).save(any(Rental.class));
-        verify(carRepository).save(any(Car.class));
+        verify(rentalRepository).findById(1L);
+        verify(carRepository).findById(1L);
+        verify(rentalRepository).save(rental);
+        verify(carRepository).save(car);
     }
 
     @Test
     @DisplayName("Verify exception is thrown when rental not found for completion")
     void complete_shouldThrowEntityNotFoundException_whenRentalNotFound() {
-        when(rentalRepository.findById(anyLong())).thenReturn(Optional.empty());
+        when(rentalRepository.findById(1L)).thenReturn(Optional.empty());
 
         EntityNotFoundException exception = assertThrows(
                 EntityNotFoundException.class,
@@ -239,8 +247,8 @@ public class RentalServiceTests {
     @DisplayName("Verify exception is thrown when car not found for completion")
     void complete_shouldThrowEntityNotFoundException_whenCarNotFound() {
         Rental rental = TestRentalUtil.getNotCompletedRental();
-        when(rentalRepository.findById(anyLong())).thenReturn(Optional.of(rental));
-        when(carRepository.findById(anyLong())).thenReturn(Optional.empty());
+        when(rentalRepository.findById(1L)).thenReturn(Optional.of(rental));
+        when(carRepository.findById(1L)).thenReturn(Optional.empty());
 
         EntityNotFoundException exception = assertThrows(
                 EntityNotFoundException.class,
